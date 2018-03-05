@@ -5,17 +5,16 @@
 
 ## Table of Contents
 - [Articles](#articles)
-- [Online Judges](#online-judges)
 - [Live Coding Practice](#live-coding-practice)
 - [Data Structures](#data-structures)
 - [Algorithms](#algorithms)
 - [Greedy Algorithms](#greedy-algorithms)
 - [Bitmasks](#bitmasks)
 - [Runtime Analysis](#runtime-analysis)
-- [Video Lectures](#video-lectures)
-- [Interview Books](#interview-books)
 - [Computer Science News](#computer-science-news)
-- [Directory Tree](#directory-tree)
+
+## Articles
+
 
 ## Live Coding Practice
 * [Pramp](https://www.pramp.com/ref/gt4)
