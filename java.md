@@ -74,7 +74,7 @@ In the Java Bytecode, the class instance is expressed as "L;" and void is expres
 
 |Java Bytecode|Type     |Description                          |
 |-------------|---------|-------------------------------------|
-|B            |reference|signed byte                          |
+|B            |byte     |signed byte                          |
 |C            |char     |Unicode character                    |
 |D            |double   |double-precision floating-point value|
 |F            |float    |single-precision floating-point value|
