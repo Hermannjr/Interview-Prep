@@ -182,6 +182,40 @@ There are three main reasons why you might want to write your own class loader.
 3. To allow the unloading of classes.
     This case is useful if the application creates large numbers of classes that are used for only a finite period. Because a class loader maintains a cache of the classes that it has loaded, these classes cannot be unloaded until the class loader itself has been dereferenced. For this reason, system and extension classes are never unloaded, but application classes can be unloaded when their class loader is.
 
+
+### Linking
+If a class loader finds an unloaded class, the class is loaded and linked by following the process as illusrated below:
+
+![./Images/class_load_stage.png](./Images/class_load_stage.png)
+
+* **Loading:** A class is obtained from a file and loaded to the JVM memory.
+* **Verifying:** Check whether or not the read class is configured as described in the Java Language Specification and JVM specifications. This is the most complicated test process of the class load processes, and takes the longest time. Most cases of the JVM TCK test cases are to test whether or not a verification error occurs by loading wrong classes.
+* **Preparing:** Prepare a data structure that assigns the memory required by classes and indicates the fields, methods, and interfaces defined in the class.
+* **Resolving:** Change all symbolic references in the constant pool of the class to direct references.
+* **Initializing:** Initialize the class variables to proper values. Execute the static initializers and initialize the static fields to the configured values.
+
+### Runtime Data Areas
+Runtime data areas are the memory areas assigned when the JVM program runs on the OS. These areas can be divided into 6 sections. The *PC Register*, *JVM Stack*, and the *Native Method Stack* areas are created on a per thread basis. The *heap*, *method area*, and the *runtime constant pool* are shared by all threads.
+
+![./Images/runtime_areas.png](./Images/runtime_areas.png)
+
+* **PC Register:** One Program Counter (PC) register exists per thread and is created when the thread is started. The PC register has the address of a JVM instruction being executed now.
+* **JVM Stack:** One JVM stack exists per thread and is created when the thread is started. This stack saves the struct (stack frame) and the jvm just pushes or pops the stack frame to the JVM Stack. If any exception occurs, each line of the stack trace shown when using a method such as `printStackTrace()` represents one stack frame.
+* **Native Method Stack:** A stack for native code written in a language other than java. This is related to JNI and has its own area.
+* **Method Area:** The ethod area is shared by all threads, created when the JVM starts. It stores runtime constant pool, field and method information, static variable and method bytecode for each of the classes and interfaces read by the JVM. The method area can be implemented in various formats by JVM vendor. Oracle Hotspot JVM calls it the *Permanent Area* or *Permanent Generation(PermGen)*. The garbage collection for the method area is optional for each JVM vendor.
+* **Runtime constant pool:** An area that corresponds to the constant_pool table in the class file format. This area is included in the method area; however it plays the most core role in JVM operation. Therefore, the JVM specification separately describes its importance. As well as the constant of each class and interface, it contains all references for methods and fields. In short, when a method or field is referred to, the JVM searches the actual address of the method or field on the memory by using the runtime constant pool.
+* **Heap:** A space that stores instances or objects, and is a target of garbage collection. This space is most frequently mentioned when discussing issues such as JVM performance. JVM vendors can determine how to configure the heap or not to collect garbage.
+
+![./Images/jvm_stack.png](./Images/jvm_stack.png)
+
+
+* **Stack Frame:** One stack frame is created whenever a method is executed in the JVM, and the stack frame is added to the JVM stack of the thread. When the method is ended, the stack frame is removed. Each stack frame has the reference for *local variable array*, *operand stack*, and *runtime constant pool* of a class where the method being executed belongs. The size of local variable array and operand stack is determined when compiling, therefore the size of the stack frame is fixed according to the method.
+* **Local variable array:** Starting at 0, where the first entry is the reference of a class instance where the method belongs. From 1, the method parameters are stored first, then followed by the local variables of the method.
+* **Operand stack:** The actual workspace of a method. Each method exchanges data between the operand stack and the local variable array, and pushes and pop other method invoke results. The necessary size of the operand stack space can be determined during compilation and therefore fixes the size of the operand stack during compilation.
+
+
+
+
 ---
 
 ## Monitoring tools
