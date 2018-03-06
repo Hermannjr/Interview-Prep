@@ -282,6 +282,7 @@ IBM JVM has introduced AOT (Ahead-Of-Time) Compiler from IBM JDK 6 as well as th
 Most Java performance improvement is accomplished by improving the execution engine. As well as the JIT compiler, various optimization techniques are being introduced so the JVM performance can be continuously improved. The biggest difference between the initial JVM and the latest JVM is the execution engine.
 
 Hotspot compiler has been introduced to Oracle Hotspot VM from version 1.3, and JIT compiler has been introduced to Dalvik VM from Android 2.2.
+
 ---
 
 ## Monitoring tools
