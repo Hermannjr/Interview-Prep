@@ -70,6 +70,14 @@ OpCodes such as aload_0 and aload_1 don't need any Operand, that's they the next
 2a b4 00 0f 2b b6 00 17 57 b1
 ```
 
+In the Java Bytecode, the class instance is expressed as "L;" and void is expressed as "V". In this way, other types have their own expressions. The following table summarizes the epxressions:
+
+|Java Bytecode|Type     |Description              |
+|-------------|---------|-------------------------|
+|B            |reference|signed byte              |
+|C            |char     |Unicode character        |
+
+
 
 ---
 
