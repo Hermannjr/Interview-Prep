@@ -145,6 +145,18 @@ A class loader loads the compiled Java Bytecode to the Runtime Data Areas, and t
 
 Class loading is done dynamically in the JVM. Loading and linking of a class happens the first time it's referenced during runtime, not compile time.
 
+
+Class Loader features:
+
+* **Hierarchical Structure:** Class loaders in Java are organized into a hierarchy with a parent-child relationship. The Bootstrap Class Loader is the parent of all class loaders.
+* **Delegation mode:** Based on the hierarchical structure, load is delegated between class loaders. When a class is loaded, the parent class loader is checked to determine whether or not the class is in the parent class loader. If the upper class loader has the class, the class is used. If not, the class loader requested for loading loads the class.
+* **Visibility limit:** A child class loader can find the class in the parent class loader; however, a parent class loader cannot find the class in the child class loader.
+* **Unload is not allowed:** A class loader can load a class but cannot unload it. Instead of unloading, the current class loader can be deleted, and a new class loader can be created.
+
+Class loader delegation model:
+
+![./Images/delegation_model.png](./Images/delegation_model.png)
+
 ---
 
 ## Monitoring tools
