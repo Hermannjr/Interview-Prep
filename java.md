@@ -85,6 +85,61 @@ In the Java Bytecode, the class instance is expressed as "L;" and void is expres
 |Z            |boolean  |true or false                        |
 |[            |reference|one array dimension                  |
 
+*Example Bytecode expressions*
+|Java Code                                 |Java Bytecode Expression                |
+|------------------------------------------|----------------------------------------|
+|double d[][][];                           |[[[D                                    |
+|Object mymethod(int I, double d, Thread t)|(IDLjava/lang/Thread;)Ljava/lang/Object;|
+
+### Class File Format
+In Java, the size of one method cannot be more than 65535 bytes. 
+
+The **goto** and **jsr** instructions have a 2-byte signed branch offset as their Operand, so they can be expanded to the 65535th index at a maximum. To support a more sufficient branch, **goto_w** and **jsr_w** are supported and receive a 4-byte signed branch offset.
+
+** Class file format outline **
+
+```java
+ClassFile {
+    u4 magic;
+    u2 minor_version;
+    u2 major_version;
+    u2 constant_pool_count;
+    cp_info constant_pool[constant_pool_count-1];
+    u2 access_flags;
+    u2 this_class;
+    u2 super_class;
+    u2 interfaces_count;
+    u2 interfaces[interfaces_count];
+    u2 fields_count;
+    field_info fields[fields_count];
+    u2 methods_count;
+    method_info methods[methods_count];
+    u2 attributes_count;
+    attribute_info attributes[attributes_count];}
+```
+
+A sample *.class* file might look like this in a hex editor:
+
+```
+ca fe ba be 00 00 00 32 00 28 07 00 02 01 00 1b
+```
+
+* **magic:** The first 4 bytes of the class file are the magic number. This is a pre-specified value to distinguish the Java class file. As shown in the Hex Editor above, the value is always 0xCAFEBABE. In short, when the first 4 bytes of a file is 0xCAFEBABE, it can be regarded as the Java class file. This is a kind of "witty" magic number related to the name "Java".
+* **minor_version, major_version:** The next 4 bytes indicate the class version. As the UserService.class file is 0x00000032, the class version is 50.0. The version of a class file compiled by JDK 1.6 is 50.0, and the version of a class file compiled by JDK 1.5 is 49.0. The JVM must maintain backward compatibility with class files compiled in a lower version than itself. On the other hand, when a upper-version class file is executed in the lower-version JVM, java.lang.UnsupportedClassVersionError occurs.
+* **constant_pool_count, constant_pool[]:** Next to the version, the class-type constant pool information is described. This is the information included in the Runtime Constant Pool area, which will be explained later. While loading the class file, the JVM includes the constant_pool information in the Runtime Constant Pool area of the method area. As the constant_pool_count of the UserService.class file is 0x0028, you can see that the constant_pool has (40-1) indexes, 39 indexes.
+* **access_flags:** This is the flag that shows the modifier information of a class; in other words, it shows public, final, abstract or whether or not to interface.
+* **this_class, super_class:** The index in the constant_pool for the class corresponding to this and super, respectively.
+* **interfaces_count, interfaces[]:** The index in the the constant_pool for the number of interfaces implemented by the class and each interface.
+* **fields_count, fields[]:** The number of fields and the field information of the class. The field information includes the field name, type information, modifier, and index in the constant_pool.
+* **methods_count, methods[]:** The number of methods in a class and the methods information of the class. The methods information includes the methods name, type and number of the parameters, return type, modifier, index in the constant_pool, execution code of the method, and exception information.
+* **attributes_count, attributes[]:** The attribute_info structure has various attributes. For field_info or method_info, attribute_info is used.
+
+### JVM Structure
+
+![./Images/jvm_structure.png](./Images/jvm_structure.png)
+
+A class loader loads the compiled Java Bytecode to the Runtime Data Areas, and the execution engine executes the Java Bytecode.
+
 
 
 ---
