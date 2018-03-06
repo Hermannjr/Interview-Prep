@@ -20,7 +20,7 @@ JVM Features:
 * **Clearly defined primitive data types** - Unlike C/C++, the JVM clearly defines the primitive data types to maintain compatibility and guarantee platform independence.
 * **Network byte order** - Java class files use network byte order. This is to maintain platform independence between the little endian used by Intel x86 and the big endian by RISC. JVM uses the network byte order, which is used for network transfer. Network byte order is big endian byte order.
 
-<img src="/Images/Big-Endian.svg?raw=true" alt="Big Endian" width="400" height="500">
+![./Images/Big-Endian.svg](./Images/Big-Endian.svg)
 
 ---
 
