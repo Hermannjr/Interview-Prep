@@ -141,6 +141,9 @@ ca fe ba be 00 00 00 32 00 28 07 00 02 01 00 1b
 A class loader loads the compiled Java Bytecode to the Runtime Data Areas, and the execution engine executes the Java Bytecode.
 
 
+#### Class Loader
+
+Class loading is done dynamically in the JVM. Loading and linking of a class happens the first time it's referenced during runtime, not compile time.
 
 ---
 
