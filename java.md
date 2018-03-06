@@ -153,9 +153,34 @@ Class Loader features:
 * **Visibility limit:** A child class loader can find the class in the parent class loader; however, a parent class loader cannot find the class in the child class loader.
 * **Unload is not allowed:** A class loader can load a class but cannot unload it. Instead of unloading, the current class loader can be deleted, and a new class loader can be created.
 
+
 Class loader delegation model:
 
 ![./Images/delegation_model.png](./Images/delegation_model.png)
+
+
+When a class loader is requested for class load, it checks whether or not the class exists in the class loader cache, the parent class loader, and itself, in the order listed. In short, it checks whether or not the class has been loaded in the class loader cache. If not, it checks the parent class loader. If the class is not found in the bootstrap class loader, the requested class loader searches for the class in the file system.
+
+* **Bootstrap class loader:** This is created when running the JVM. It loads Java APIs, including object classes. Unlike other class loaders, it is implemented in native code instead of Java.
+* **Extension class loader:** It loads the extension classes excluding the basic Java APIs. It also loads various security extension functions.
+* **System class loader:** If the bootstrap class loader and the extension class loader load the JVM components, the system class loader loads the application classes. It loads the class in the $CLASSPATH specified by the user.
+* **User-defined class loader:** This is a class loader that an application user directly creates on the code.
+
+
+**Why write a custom class loader?**
+
+You might want to write your own class loader so that you can load classes from an alternate repository, partition user code, or unload classes.
+
+There are three main reasons why you might want to write your own class loader.
+
+1. To allow class loading from alternative repositories.
+    This is the most common case, in which an application developer might want to load classes from other locations, for example, over a network connection.
+
+2. To partition user code.
+    This case is less frequently used by application developers, but widely used in servlet engines.
+
+3. To allow the unloading of classes.
+    This case is useful if the application creates large numbers of classes that are used for only a finite period. Because a class loader maintains a cache of the classes that it has loaded, these classes cannot be unloaded until the class loader itself has been dereferenced. For this reason, system and extension classes are never unloaded, but application classes can be unloaded when their class loader is.
 
 ---
 
