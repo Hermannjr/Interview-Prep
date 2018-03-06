@@ -22,6 +22,55 @@ JVM Features:
 
 ![./Images/Big-Endian.svg](./Images/Big-Endian.svg)
 
+Differnt VMs:
+* Oracle Hotspot JVM
+* Oracle JRockit
+* IBM J9
+* SAP JVM
+* Azul Zulu
+* Azul Zing
+* Google's Android JVM, Dalvik, though not byte code compatible since it's register based
+
+### Java bytecode
+We can use tools like **javap** to disassemble class files into human-readable bytecode. As an example, the following method:
+
+```java
+// UserService.java
+…
+public void add(String userName) {
+    admin.addUser(userName);
+}
+```
+
+would look like this:
+
+```java
+public void add(java.lang.String);
+  Code:
+   0:   aload_0
+   1:   getfield        #15; //Field admin:Lcom/nhn/user/UserAdmin;
+   4:   aload_1
+   5:   invokevirtual   #23; //Method com/nhn/user/UserAdmin.addUser:(Ljava/lang/String;)V
+   8:   return
+```
+
+The fourth instruction uses **invokevirtual** to invoke the method corresponding to the 23rd index. The *javap* program annotates the method with the name and namespace added as a comment. 
+
+These are the OpCodes that invoke a method in Java Bytecode:
+* **invokeinterface** - invokes an interface method
+* **invokespecial** - invokes an initializer, private method, or superclass method
+* **invokestatic** - invokes static methods
+* **invokevirtual** - invokes instance methods
+
+The instruction set of Java Bytecode consists of OpCode and Operand. In this case, the OpCode for invokevirtual requires a 2-byte Operand. The number in front of the instruction is the byte number. Instruction OpCodes such as *aload_0*, *getfield*, and *invokevirtual* are expressed as a 1-byte byte number (*aload_0* = 0x2a, *getfield* = 0xb4, *invokevirtual* = 0xb6). Therefore, the maximum number of OpCodes is limited to 256.
+
+OpCodes such as aload_0 and aload_1 don't need any Operand, that's they the next instruction follows with the next byte. However, getfield and invokevirtual require the 2-byte Operand, and thus, the next instruction is written on the fourth byte, skipping two additional bytes. The resulting bytecode in the class file looks like this then:
+
+```
+2a b4 00 0f 2b b6 00 17 57 b1
+```
+
+
 ---
 
 ## Monitoring tools
