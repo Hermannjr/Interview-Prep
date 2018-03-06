@@ -214,8 +214,74 @@ Runtime data areas are the memory areas assigned when the JVM program runs on th
 * **Operand stack:** The actual workspace of a method. Each method exchanges data between the operand stack and the local variable array, and pushes and pop other method invoke results. The necessary size of the operand stack space can be determined during compilation and therefore fixes the size of the operand stack during compilation.
 
 
+### An example
+Using the previous method as an example
+```java
+// UserService.java
+...
+public void add(String userName) {
+    admin.addUser(userName);
+}
+```
 
+We get the following bytecode (human-readable using *javap -c*):
+```java
+public void add(java.lang.String);
+  Code:
+   0:   aload_0
+   1:   getfield        #15; //Field admin:Lcom/nhn/user/UserAdmin;
+   4:   aload_1
+   5:   invokevirtual   #23; //Method com/nhn/user/UserAdmin.addUser:(Ljava/lang/String;)Lcom/nhn/user/User;
+   8:   pop
+   9:   return
+```
+As mentioned earlier, the JVM is stack based and thus doesn't write register name, memory addressor or offset on the operand (unlike x86 or RISC for example). It uses index numbers, such as 15 and 23 instead of memory addresses since it manages the memory itself. These indexes are found in the *constant pool* of the current class (`UserService.class`). In short, the JVM creates a constant pool for each class, and the pool stores the reference of the actual target.
 
+Each row of the disassembled code is interpreted as follows then:
+
+* **aload_0:** Add the #0 index of the local variable array to the Operand stack. The #0 index of the local variable array is always this, the reference for the current class instance.
+* **getfield #15:** In the current class constant pool, add the #15 index to the Operand stack. UserAdmin admin field is added. Since the admin field is a class instance, a reference is added.
+* **aload_1:** Add the #1 index of the local variable array to the Operand stack. From the #1 index of the local variable array, it is a method parameter. Therefore, the reference of String userName sent while invoking add() is added.
+* **invokevirtual #23:** Invoke the method corresponding to the #23 index in the current class constant pool. At this time, the reference added by using getfield and the parameter added by using aload_1 are sent to the method to invoke. When the method invocation is completed, add the return value to the Operand stack.
+* **pop:** Pop the return value of invoking by using invokevirtual from the Operand stack. You can see that the code compiled by the previous library has no return value. In short, the previous has no return value, so there was no need to pop the return value from the stack.
+* **return:** Complete the method.
+
+![./Images/bytecode_example.png](./Images/bytecode_example.png)
+
+For reference, in this method, no local variable array has been changed. So the figure above displays the changes in Operand stack only. However, in most cases, local variable array is also changed. Data transfer between the local variable array and the Operand stack is made by using a lot of load instructions (aload, iload) and store instructions (astore, istore). 
+
+In this figure, we have checked the brief description of the runtime constant pool and the JVM stack. When the JVM runs, each class instance will be assigned to the heap, and class information including User, UserAdmin, UserService, and String will be stored in the method area.
+
+## Execution Engine
+The execution engine is tasked with actually executing the bytecode that is assigned to the runtime data areas in the JVM via class loader. The engine reads the bytecode (OpCode + Operand) and executes it one-by-one. 
+
+Since the java bytecode is written for the JVM, which runs on the OS, there's still a step missing. The execution engine must change the java bytecode into machine code of the OS the JVM is currently executing on.
+There's two ways to accomplish this:
+
+* **Interpreter:** Reads, interprets and executes the bytecode instructions one by one. As it interprets and executes instructions this way, it can quickly interpret one bytecode, but slowly executes the interpreted result. This is the disadvantage of an interpreted language.
+* **JIT (Just-In-Time) compiler:** The JIT compiler has been introduced to compensate for the disadvantages of the interpreter. The execution engine runs as an interpreter first, and at the appropriate time, the JIT compiler compiles the entire bytecode to change it to native code. After that, the execution engine no longer interprets the method, but directly executes using native code. Execution in native code is much faster than interpreting instructions one by one. The compiled code can be executed quickly since the native code is stored in the cache.
+
+The tradeoff for JIT is that it takes more time for the compiler to compile the code than it for the interpreter to interpret the code one by one. Therefore, if the code is only run once, it's better to just use the interpreter. However, if it's run more than once, it's better to compile. To get the best of both worlds, modern JVMs analyze and keep track of how often code is run, and after passing a certain threshold will use the JIT compiler to speed up subsequent execution.
+
+![./Images/figure7.png](./Images/figure7.png)
+
+Most JIT compilers run as shown in the figure below:
+
+![./Images/figure8.png](./Images/figure8.png)
+
+The JIT compiler converts the bytecode to an intermediate-level expression, IR (Intermediate Representation), to execute optimization, and then converts the expression to native code.
+
+Oracle Hotspot VM uses a JIT compiler called Hotspot Compiler. It is called Hotspot because Hotspot Compiler searches the 'Hotspot' that requires compiling with the highest priority through profiling, and then it compiles the hotspot to native code. If the method that has the bytecode compiled is no longer frequently invoked, in other words, if the method is not the hotspot any more, the Hotspot VM removes the native code from the cache and runs in interpreter mode. The Hotspot VM is divided into the Server VM and the Client VM, and the two VMs use different JIT compilers.
+
+![./Images/figure9.png](./Images/figure9.png)
+
+The client VM and the server VM use an identical runtime; however, they use different JIT compilers, as shown in the above figure. The client VM and the server VM use an identical runtime, however, they use different JIT compilers as shown in the above figure. Advanced Dynamic Optimizing Compiler used by the server VM uses more complex and diverse performance optimization techniques.
+
+IBM JVM has introduced AOT (Ahead-Of-Time) Compiler from IBM JDK 6 as well as the JIT compiler. This means that many JVMs share the native code compiled through the shared cache. In short, the code that has been already compiled through the AOT compiler can be used by another JVM without compiling. In addition, IBM JVM provides a fast way of execution by pre-compiling code to JXE (Java EXecutable) file format using the AOT compiler.
+
+Most Java performance improvement is accomplished by improving the execution engine. As well as the JIT compiler, various optimization techniques are being introduced so the JVM performance can be continuously improved. The biggest difference between the initial JVM and the latest JVM is the execution engine.
+
+Hotspot compiler has been introduced to Oracle Hotspot VM from version 1.3, and JIT compiler has been introduced to Dalvik VM from Android 2.2.
 ---
 
 ## Monitoring tools
