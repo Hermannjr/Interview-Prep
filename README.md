@@ -12,9 +12,7 @@
 - [Bitmasks](#bitmasks)
 - [Runtime Analysis](#runtime-analysis)
 - [Computer Science News](#computer-science-news)
-
-## Articles
-
+- [Links](#links)
 
 ## Live Coding Practice
 * [Pramp](https://www.pramp.com/ref/gt4)
@@ -332,3 +330,6 @@ or equal to those of the children and the lowest key is in the root node
 ## Computer Science News
 * [Hacker News](https://news.ycombinator.com/)
 * [Lobsters](https://lobste.rs/)
+
+## Links
+* [Tech Interview Handbook](https://github.com/yangshun/tech-interview-handbook)
