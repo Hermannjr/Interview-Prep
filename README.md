@@ -4,6 +4,7 @@
 > Maintainer - [Hermann Hans Jr.](https://github.com/hermannjr)
 
 ## Table of Contents
+- [Java](./java.md)
 - [Data Structures](#data-structures)
 - [Algorithms](#algorithms)
 - [Greedy Algorithms](#greedy-algorithms)
@@ -328,3 +329,4 @@ or equal to those of the children and the lowest key is in the root node
 * [Tech Interview Handbook](https://github.com/yangshun/tech-interview-handbook)
 * [Hashtables, Pigeonholes, and Birthdays](https://blog.codinghorror.com/hashtables-pigeonholes-and-birthdays/)
 * [Java_hashCode()](https://en.wikipedia.org/wiki/Java_hashCode())
+* [Udemy - Software Engineer Interview Unleashed](https://www.udemy.com/software-engineer-interview-unleashed/)
