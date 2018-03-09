@@ -1,11 +1,9 @@
-# Interview-Prep
-> Personal preparation for technical interviews
+# Technical Interview Preparation
+> This repository is my personal interview preparation. There's a ton of similar lists already, and a lot of the information contained herein is copied together from these lists. So why make my own? As part of the studying process. I find it easier to study and review material that I've written and ordered in a way that makes sense to me. 
 >
 > Maintainer - [Hermann Hans Jr.](https://github.com/hermannjr)
 
 ## Table of Contents
-- [Articles](#articles)
-- [Live Coding Practice](#live-coding-practice)
 - [Data Structures](#data-structures)
 - [Algorithms](#algorithms)
 - [Greedy Algorithms](#greedy-algorithms)
@@ -13,11 +11,6 @@
 - [Runtime Analysis](#runtime-analysis)
 - [Computer Science News](#computer-science-news)
 - [Links](#links)
-
-## Live Coding Practice
-* [Pramp](https://www.pramp.com/ref/gt4)
-* [Gainlo](http://www.gainlo.co/#!/)
-* [Refdash](https://refdash.com/)
 
 ## Data Structures
 ### Linked List
