@@ -333,3 +333,4 @@ or equal to those of the children and the lowest key is in the root node
 
 ## Links
 * [Tech Interview Handbook](https://github.com/yangshun/tech-interview-handbook)
+* [Hashtables, Pigeonholes, and Birthdays](https://blog.codinghorror.com/hashtables-pigeonholes-and-birthdays/)
