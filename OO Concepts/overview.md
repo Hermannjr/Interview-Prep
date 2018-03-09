@@ -20,3 +20,11 @@ The Advantage of using abstraction is that the user doesn't have to care about i
 * **Single Responsibility:** A class should always have only a single functionality / responsibility. This avoids further coupling of functionality where it shouldn't take place.
 
 * **Open Closed Design:** Make all methods and classes Closed for modification, but Open for extension. That way, tried and tested code can remian static but can be modified to perform new tasks as needed.
+
+## SOLID
+
+* **S**ingle Responsibility Principle
+* **O**pen/Closed Principle
+* **L**iskov Substitution Principle
+* **I**nterface Segregation Principle
+* **D**ependency Inversion
